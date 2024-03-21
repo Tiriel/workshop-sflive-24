@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% from 'includes/_macro.html.twig' import nav_link %}
+
+{% block title %}Administration{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Administration</h1>
+    <ul class="nav flex-column">
+        {{ nav_link(app.current_route, 'app_admin_movie_index', 'Movie Administration') }}
+        {{ nav_link(app.current_route, 'app_admin_user_index', 'User Administration') }}
+    </ul>
+</div>
+{% endblock %}

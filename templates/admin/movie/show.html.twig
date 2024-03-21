@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Movie{% endblock %}
+
+{% block body %}
+    <h1>Movie</h1>
+
+    <img src="{{ movie.poster }}" alt="{{ movie.title }} Poster" class="float-end">
+    <table class="table w-75">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ movie.id }}</td>
+            </tr>
+            <tr>
+                <th>IMDb Id</th>
+                <td>{{ movie.imdbId }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ movie.title }}</td>
+            </tr>
+            <tr>
+                <th>Rated</th>
+                <td>{{ movie.rated }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ movie.country }}</td>
+            </tr>
+            <tr>
+                <th>ReleasedAt</th>
+                <td>{{ movie.releasedAt ? movie.releasedAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Plot</th>
+                <td>{{ movie.plot }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ movie.price }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_movie_index') }}" class="btn btn-outline-primary">back to list</a>
+
+    <a href="{{ path('app_admin_movie_edit', {'id': movie.id}) }}" class="btn btn-warning">edit</a>
+
+    {{ include('admin/movie/_delete_form.html.twig') }}
+{% endblock %}

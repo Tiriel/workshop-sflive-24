@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Movie index{% endblock %}
+
+{% block body %}
+    <h1>Movie index</h1>
+
+    <div class="btn-group float-end">
+        <a href="{{ path('app_admin_main_index') }}" class="btn btn-outline-primary">Admin panel</a>
+        <a href="{{ path('app_admin_movie_new') }}" class="btn btn-primary">Create new</a>
+    </div>
+    {{ pagerfanta(movies) }}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Country</th>
+                <th>ReleasedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for movie in movies %}
+            <tr>
+                <td>{{ movie.id }}</td>
+                <td>{{ movie.title }}</td>
+                <td>{{ movie.country }}</td>
+                <td>{{ movie.releasedAt ? movie.releasedAt|date('d/m/Y') : '' }}</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ path('app_admin_movie_show', {'id': movie.id}) }}" class="btn btn-sm btn-outline-primary">show</a>
+                        <a href="{{ path('app_admin_movie_edit', {'id': movie.id}) }}" class="btn btn-sm btn-outline-secondary">edit</a>
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="btn-group float-end">
+        <a href="{{ path('app_admin_main_index') }}" class="btn btn-outline-primary">Admin panel</a>
+        <a href="{{ path('app_admin_movie_new') }}" class="btn btn-primary">Create new</a>
+    </div>
+    {{ pagerfanta(movies) }}
+{% endblock %}

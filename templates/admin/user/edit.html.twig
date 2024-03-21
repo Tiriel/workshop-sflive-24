@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block body %}
+    <h1>Edit User</h1>
+
+    <section class="w-50 m-auto">
+        {{ include('admin/user/_form.html.twig', {'button_label': 'Update'}) }}
+
+        {{ include('admin/user/_delete_form.html.twig') }}
+
+        <a href="{{ path('app_admin_user_index') }}" class="btn btn-secondary mb-3">back to list</a>
+    </section>
+{% endblock %}
