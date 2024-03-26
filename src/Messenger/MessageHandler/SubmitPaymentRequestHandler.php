@@ -2,6 +2,7 @@
 
 namespace App\Messenger\MessageHandler;
 
+use App\Entity\Invoice;
 use App\Messenger\Message\SubmitPaymentRequest;
 use App\Payment\Exception\InvalidTransitionException;
 use App\Payment\Exception\PaymentErrorException;
@@ -16,7 +17,7 @@ class SubmitPaymentRequestHandler
 {
     public function __construct(
         protected readonly PaymentGateway $gateway,
-        protected readonly WorkflowInterface $paymentStateMachine,
+        protected readonly WorkflowInterface $paymentWorkflow,
         protected readonly EntityManagerInterface $manager,
     )
     {
@@ -24,7 +25,7 @@ class SubmitPaymentRequestHandler
 
     public function __invoke(SubmitPaymentRequest $message): void
     {
-        $invoice = $message->getInvoice();
+        $invoice = $this->manager->find(Invoice::class, $message->getInvoiceId());
 
         try {
             $response = $this->gateway->initiatePayment($invoice);
@@ -32,11 +33,11 @@ class SubmitPaymentRequestHandler
             throw new PaymentErrorException($invoice);
         }
 
-        if (!$this->paymentStateMachine->can($invoice, 'submit_request')) {
+        if (!$this->paymentWorkflow->can($invoice, 'submit_request')) {
             throw new InvalidTransitionException($invoice);
         }
 
-        $this->paymentStateMachine->apply($invoice, 'submit_request');
+        $this->paymentWorkflow->apply($invoice, 'submit_request');
 
         $this->manager->persist($invoice);
         $this->manager->flush();

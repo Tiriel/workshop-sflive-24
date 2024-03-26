@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\InvoiceRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
@@ -13,8 +14,8 @@ class Invoice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $status = null;
+    #[ORM\Column(type: Types::SIMPLE_ARRAY)]
+    private ?array $status = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -25,12 +26,12 @@ class Invoice
         return $this->id;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?array
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(array $status): static
     {
         $this->status = $status;
 

@@ -33,7 +33,7 @@ class InvoiceController extends AbstractController
     #[Route('/pay/{id<\d+>}', name: 'app_invoice_pay', methods: ['GET'])]
     public function pay(?Invoice $invoice, MessageBusInterface $bus): Response
     {
-        $bus->dispatch(new SubmitPaymentRequest($invoice));
+        $bus->dispatch(new SubmitPaymentRequest($invoice->getId()));
 
         $this->addFlash('success', 'Your order has been confirmed!');
 
@@ -43,7 +43,7 @@ class InvoiceController extends AbstractController
     #[Route('/abort/{id<\d+>}', name: 'app_invoice_abort', methods: ['GET'])]
     public function abort(?Invoice $invoice, MessageBusInterface $bus): Response
     {
-        $bus->dispatch(new AbortPayment($invoice));
+        $bus->dispatch(new AbortPayment($invoice->getId()));
 
         $this->addFlash('danger', 'Your order has been aborted.');
 

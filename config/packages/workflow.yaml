@@ -2,6 +2,7 @@ framework:
     workflows:
         payment:
             audit_trail: true
+            type: workflow
             supports:
                 - App\Entity\Invoice
             marking_store:
@@ -14,6 +15,13 @@ framework:
                 - aborted
                 - failed
                 - paid
+                - is_refundable
+                - is_refund_accepted
+                - refund_allowed
+                - refund_disallowed
+                - refund_accepted
+                - refund_rejected
+                - refunded
             transitions:
                 submit_request:
                     from: requested
@@ -27,3 +35,21 @@ framework:
                 pay:
                     from: pending
                     to: paid
+                submit_refund_request:
+                    from: paid
+                    to: [is_refundable, is_refund_accepted]
+                allow_refund:
+                    from: is_refundable
+                    to: refund_allowed
+                disallow_refund:
+                    from: is_refundable
+                    to: refund_disallowed
+                accept_refund:
+                    from: is_refund_accepted
+                    to: refund_accepted
+                reject_refund:
+                    from: is_refund_accepted
+                    to: refund_rejected
+                refund:
+                    from: [refund_allowed, refund_accepted]
+                    to: refunded

@@ -21,6 +21,8 @@ framework:
             Symfony\Component\Notifier\Message\SmsMessage: async
             App\Messenger\Message\PaymentFailed: async
             App\Messenger\Message\PaymentConfirmed: async
+            App\Messenger\Message\SubmitPaymentRequest: async
+            App\Messenger\Message\AbortPayment: async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async

@@ -2,16 +2,14 @@
 
 namespace App\Messenger\Message;
 
-use App\Entity\Invoice;
-
 abstract class AbstractInvoiceMessage
 {
-    public function __construct(protected Invoice $invoice)
+    public function __construct(protected int $invoiceId)
     {
     }
 
-    public function getInvoice(): Invoice
+    public function getInvoiceId(): int
     {
-        return $this->invoice;
+        return $this->invoiceId;
     }
 }

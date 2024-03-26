@@ -14,7 +14,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 final class PaymentConfirmedHandler
 {
     public function __construct(
-        protected readonly WorkflowInterface $paymentStateMachine,
+        protected readonly WorkflowInterface $paymentWorkflow,
         protected readonly EntityManagerInterface $manager,
     )
     {
@@ -25,7 +25,7 @@ final class PaymentConfirmedHandler
         $invoice = $this->manager->getRepository(Invoice::class)->find($message->getInvoiceId());
 
         try {
-            $this->paymentStateMachine->apply($invoice, 'pay');
+            $this->paymentWorkflow->apply($invoice, 'pay');
         } catch (TransitionException) {
             throw new InvalidTransitionException($invoice);
         }

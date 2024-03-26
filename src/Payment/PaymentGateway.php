@@ -8,6 +8,8 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 
 class PaymentGateway
 {
+    protected ?MockHttpClient $client = null;
+
     public function __construct()
     {
         $this->client = new MockHttpClient(function ($method, $url, $options) {

@@ -2,6 +2,7 @@
 
 namespace App\Messenger\MessageHandler;
 
+use App\Entity\Invoice;
 use App\Messenger\Message\AbortPayment;
 use App\Payment\Exception\InvalidTransitionException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,7 +14,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 class AbortPaymentHandler
 {
     public function __construct(
-        protected readonly WorkflowInterface $paymentStateMachine,
+        protected readonly WorkflowInterface $paymentWorkflow,
         protected readonly EntityManagerInterface $manager,
     )
     {
@@ -21,7 +22,7 @@ class AbortPaymentHandler
 
     public function __invoke(AbortPayment $message): void
     {
-        $invoice = $message->getInvoice();
+        $invoice = $this->manager->find(Invoice::class, $message->getInvoiceId());
 
         try {
             $this->paymentStateMachine->apply($invoice, 'abort');

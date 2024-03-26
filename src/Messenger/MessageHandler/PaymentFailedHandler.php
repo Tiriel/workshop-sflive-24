@@ -2,6 +2,7 @@
 
 namespace App\Messenger\MessageHandler;
 
+use App\Entity\Invoice;
 use App\Messenger\Message\PaymentFailed;
 use App\Payment\Exception\InvalidTransitionException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,7 +14,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 final class PaymentFailedHandler
 {
     public function __construct(
-        protected readonly WorkflowInterface $paymentStateMachine,
+        protected readonly WorkflowInterface $paymentWorkflow,
         protected readonly EntityManagerInterface $manager,
     )
     {
@@ -24,7 +25,7 @@ final class PaymentFailedHandler
         $invoice = $this->manager->getRepository(Invoice::class)->find($message->getInvoiceId());
 
         try {
-            $this->paymentStateMachine->apply($invoice, 'pay');
+            $this->paymentWorkflow->apply($invoice, 'fail');
         } catch (TransitionException) {
             throw new InvalidTransitionException($invoice);
         }
