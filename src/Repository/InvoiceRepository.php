@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Invoice;
+use App\Entity\Movie;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
  * @extends ServiceEntityRepository<Invoice>
@@ -16,9 +19,29 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class InvoiceRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, protected WorkflowInterface $paymentWorkflow)
     {
         parent::__construct($registry, Invoice::class);
+    }
+
+    public function findRefundable(Movie $movie, User $user): ?Invoice
+    {
+        $invoices = $this->createQueryBuilder('i')
+            ->andWhere('i.movie = :movie')
+            ->andWhere('i.user = :user')
+            ->setParameter('movie', $movie)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($invoices as $invoice) {
+            dump($invoice);
+            if ($this->paymentWorkflow->can($invoice, 'submit_refund_request')) {
+                return $invoice;
+            }
+        }
+
+        return null;
     }
 
     //    /**

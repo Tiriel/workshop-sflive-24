@@ -8,7 +8,7 @@ framework:
             marking_store:
                 type: 'method'
                 property: 'status'
-            initial_marking: requested
+            initial_marking: [requested]
             places:
                 - requested
                 - pending

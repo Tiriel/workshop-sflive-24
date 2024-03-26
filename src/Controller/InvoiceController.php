@@ -11,16 +11,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 class InvoiceController extends AbstractController
 {
     #[Route('/checkout/{id<\d+>}', name: 'app_invoice_checkout', methods: ['GET'])]
-    public function checkout(?Movie $movie, EntityManagerInterface $manager): Response
+    public function checkout(?Movie $movie, EntityManagerInterface $manager, WorkflowInterface $paymentWorkflow): Response
     {
         $invoice = (new Invoice())
             ->setMovie($movie)
-            ->setStatus('requested')
+            ->setUser($this->getUser())
         ;
+        $paymentWorkflow->getMarking($invoice);
+        dump($invoice);
         $manager->persist($invoice);
         $manager->flush();
 

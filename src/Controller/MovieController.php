@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\MovieType;
 use App\Movie\Search\Enum\SearchType;
 use App\Movie\Search\Provider\MovieProvider;
+use App\Repository\InvoiceRepository;
 use App\Repository\MovieRepository;
 use App\Security\Voter\MovieVoter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,10 +39,11 @@ class MovieController extends AbstractController
 
     #[IsGranted(MovieVoter::UNDERAGE, 'movie')]
     #[Route('/{id<\d+>}', name: 'app_movie_show', methods: ['GET'])]
-    public function show(?Movie $movie): Response
+    public function show(?Movie $movie, InvoiceRepository $invoiceRepository): Response
     {
         return $this->render('movie/show.html.twig', [
             'movie' => $movie,
+            'invoice' => $invoiceRepository->findRefundable($movie, $this->getUser()),
         ]);
     }
 
