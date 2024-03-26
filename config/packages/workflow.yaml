@@ -1,0 +1,29 @@
+framework:
+    workflows:
+        payment:
+            audit_trail: true
+            supports:
+                - App\Entity\Invoice
+            marking_store:
+                type: 'method'
+                property: 'status'
+            initial_marking: requested
+            places:
+                - requested
+                - pending
+                - aborted
+                - failed
+                - paid
+            transitions:
+                submit_request:
+                    from: requested
+                    to: pending
+                abort:
+                    from: requested
+                    to: aborted
+                fail:
+                    from: pending
+                    to: failed
+                pay:
+                    from: pending
+                    to: paid
