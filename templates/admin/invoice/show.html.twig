@@ -20,7 +20,7 @@
             </tr>
             <tr>
                 <th>Status</th>
-                <td>{{ invoice.status }}</td>
+                <td>{{ invoice.status|keys|join(', ') }}</td>
             </tr>
             <tr>
                 <th>Movie</th>
@@ -35,9 +35,7 @@
 
     <a href="{{ path('app_admin_invoice_index') }}" class="btn btn-primary">back to list</a>
 
-    {% if 'is_refund_accepted' in invoice.status %}
-        <a href="{{ path('app_admin_invoice_accept_refund', {'id': invoice.id}) }}" class="btn btn-danger">edit</a>
-    {% endif %}
+    <a href="{{ path('app_admin_invoice_accept_refund', {'id': invoice.id}) }}" class="btn btn-danger">Accept refund</a>
 
     {{ include('admin/invoice/_delete_form.html.twig') }}
 </div>

@@ -6,6 +6,7 @@ use App\Entity\Invoice;
 use App\Entity\Movie;
 use App\Messenger\Message\AbortPayment;
 use App\Messenger\Message\SubmitPaymentRequest;
+use App\Messenger\Message\SubmitRefundRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,6 +50,16 @@ class InvoiceController extends AbstractController
         $bus->dispatch(new AbortPayment($invoice->getId()));
 
         $this->addFlash('danger', 'Your order has been aborted.');
+
+        return $this->redirectToRoute('app_movie_show', ['id' => $invoice->getMovie()->getId()]);
+    }
+
+    #[Route('/refund/{id<\d+>}', name: 'app_invoice_refund_request', methods: ['GET'])]
+    public function refundRequest(?Invoice $invoice, MessageBusInterface $bus): Response
+    {
+        $bus->dispatch(new SubmitRefundRequest($invoice->getId()));
+
+        $this->addFlash('info', 'Refund request received.');
 
         return $this->redirectToRoute('app_movie_show', ['id' => $invoice->getMovie()->getId()]);
     }

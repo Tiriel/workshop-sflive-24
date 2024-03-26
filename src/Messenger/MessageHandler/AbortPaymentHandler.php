@@ -11,26 +11,15 @@ use Symfony\Component\Workflow\Exception\TransitionException;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 #[AsMessageHandler]
-class AbortPaymentHandler
+class AbortPaymentHandler extends AbstractInvoiceMessageHandler
 {
-    public function __construct(
-        protected readonly WorkflowInterface $paymentWorkflow,
-        protected readonly EntityManagerInterface $manager,
-    )
+    public function getTransition(): string
     {
+        return 'abort';
     }
 
-    public function __invoke(AbortPayment $message): void
+    public function getMessageClassName(): string
     {
-        $invoice = $this->manager->find(Invoice::class, $message->getInvoiceId());
-
-        try {
-            $this->paymentStateMachine->apply($invoice, 'abort');
-        } catch (TransitionException) {
-            throw new InvalidTransitionException($invoice);
-        }
-
-        $this->manager->persist($invoice);
-        $this->manager->flush();
+        return AbortPayment::class;
     }
 }

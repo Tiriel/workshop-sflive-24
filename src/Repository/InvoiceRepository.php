@@ -35,7 +35,6 @@ class InvoiceRepository extends ServiceEntityRepository
             ->getResult();
 
         foreach ($invoices as $invoice) {
-            dump($invoice);
             if ($this->paymentWorkflow->can($invoice, 'submit_refund_request')) {
                 return $invoice;
             }

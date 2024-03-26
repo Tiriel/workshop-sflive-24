@@ -26,6 +26,13 @@
                 </ul>
             </div>
             <a href="{{ path('app_invoice_checkout', {id: movie.id}) }}" class="btn btn-primary">Order movie</a>
+            {% if invoice is not null %}
+                {% for key in invoice.status|keys %}
+                    {% if key == 'paid' %}
+                    <a href="{{ path('app_invoice_refund_request', {id: invoice.id}) }}" class="btn btn-warning">Ask for refund</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         {% else %}
             <h1>Not found</h1>
         {% endif %}

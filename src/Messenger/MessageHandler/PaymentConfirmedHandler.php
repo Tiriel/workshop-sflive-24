@@ -11,25 +11,16 @@ use Symfony\Component\Workflow\Exception\TransitionException;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 #[AsMessageHandler]
-final class PaymentConfirmedHandler
+final class PaymentConfirmedHandler extends AbstractInvoiceMessageHandler
 {
-    public function __construct(
-        protected readonly WorkflowInterface $paymentWorkflow,
-        protected readonly EntityManagerInterface $manager,
-    )
+
+    public function getTransition(): string
     {
+        return 'pay';
     }
 
-    public function __invoke(PaymentConfirmed $message)
+    public function getMessageClassName(): string
     {
-        $invoice = $this->manager->getRepository(Invoice::class)->find($message->getInvoiceId());
-
-        try {
-            $this->paymentWorkflow->apply($invoice, 'pay');
-        } catch (TransitionException) {
-            throw new InvalidTransitionException($invoice);
-        }
-
-        $this->manager->flush();
+        return PaymentConfirmed::class;
     }
 }

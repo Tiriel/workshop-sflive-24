@@ -38,8 +38,5 @@ class SubmitPaymentRequestHandler
         }
 
         $this->paymentWorkflow->apply($invoice, 'submit_request');
-
-        $this->manager->persist($invoice);
-        $this->manager->flush();
     }
 }

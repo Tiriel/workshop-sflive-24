@@ -17,7 +17,7 @@
         {% for invoice in invoices %}
             <tr>
                 <td>{{ invoice.id }}</td>
-                <td>{{ invoice.status }}</td>
+                <td>{{ invoice.status|keys|join(', ') }}</td>
                 <td>
                     <a href="{{ path('app_admin_invoice_show', {'id': invoice.id}) }}">show</a>
                 </td>

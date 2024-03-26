@@ -3,9 +3,9 @@
 namespace App\Payment\Exception;
 
 use App\Entity\Invoice;
-use Symfony\Component\Messenger\Exception\RecoverableMessageHandlingException;
+use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 
-class InvalidTransitionException extends RecoverableMessageHandlingException
+class InvalidTransitionException extends UnrecoverableMessageHandlingException
 {
     public function __construct(Invoice $invoice)
     {

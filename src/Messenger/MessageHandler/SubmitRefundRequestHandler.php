@@ -11,25 +11,16 @@ use Symfony\Component\Workflow\Exception\TransitionException;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 #[AsMessageHandler]
-final class SubmitRefundRequestHandler
+final class SubmitRefundRequestHandler extends AbstractInvoiceMessageHandler
 {
-    public function __construct(
-        protected readonly WorkflowInterface $paymentWorkflow,
-        protected readonly EntityManagerInterface $manager,
-    )
+
+    public function getTransition(): string
     {
+        return 'submit_refund_request';
     }
 
-    public function __invoke(SubmitRefundRequest $message)
+    public function getMessageClassName(): string
     {
-        $invoice = $this->manager->find(Invoice::class, $message->getInvoiceId());
-
-        try {
-            $this->paymentWorkflow->apply($invoice, 'submit_refund_request');
-        } catch (TransitionException) {
-            throw new InvalidTransitionException($invoice);
-        }
-
-        $this->manager->flush();
+        return SubmitRefundRequest::class;
     }
 }
