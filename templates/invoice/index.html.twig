@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Order confirmation{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Confirm your order</h1>
+
+    <div class="mb-3">
+        <div class="text-center">
+            <img class="w-25" src="{{ movie.poster }}" alt="{{ movie.title }} cover">
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">{{ movie.title }}</li>
+            <li class="list-group-item">Rated : {{ movie.rated }}</li>
+            <li class="list-group-item">Genre : {{ movie.genres|map(genre => genre.name)|join(', ') }}</li>
+            <li class="list-group-item">Price : {{ (movie.price / 100)|format_currency('EUR', locale = 'fr') }}</li>
+        </ul>
+        <div class="text-center">
+            <a href="{{ path('app_invoice_pay', {id: invoice.id}) }}" class="btn btn-primary">Confirm</a>
+            <a href="{{ path('app_invoice_abort', {id: invoice.id}) }}" class="btn btn-secondary">Abort</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

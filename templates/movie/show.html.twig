@@ -4,6 +4,12 @@
 
 {% block body %}
     <div class="example-wrapper">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+
         {% if movie is not empty %}
             <h1>{{ movie.title }}</h1>
 
@@ -19,7 +25,7 @@
                     <li class="list-group-item">Price : {{ (movie.price / 100)|format_currency('EUR', locale = 'fr') }}</li>
                 </ul>
             </div>
-            <a href="#" class="btn btn-primary disabled">Order movie</a>
+            <a href="{{ path('app_invoice_checkout', {id: movie.id}) }}" class="btn btn-primary">Order movie</a>
         {% else %}
             <h1>Not found</h1>
         {% endif %}
